@@ -1,3 +1,18 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+
 
 # Create your models here.
+class Book(models.Model):
+    book_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=200)
+    isbn = models.IntegerField()
+    description = models.CharField(max_length=200)
+    category = models.CharField(max_length=200)
+    is_available = models.BooleanField(default=True)
+    pdf_reference = models.FileField(upload_to='pdfs/', null=True, verbose_name="", storage=FileSystemStorage(location=settings.MEDIA_ROOT))
+
+    def __str__(self):
+        return self.title
