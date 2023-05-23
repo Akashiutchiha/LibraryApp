@@ -37,17 +37,17 @@ class LibraryCard(models.Model):
     cardNumber = models.IntegerField()
     
     def __str__(self):
-        return self.cardNumber
+        return str(self.cardNumber)
     
 class Borrowing(models.Model):
     borrowing_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE, null=True)
     card_id = models.ForeignKey(LibraryCard, on_delete=models.CASCADE)
     borrowDate = models.DateField(auto_now_add=True)
     date_due = models.DateField()
     is_returned = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.borrowing_id
+        return str(self.borrowing_id)
     
     
