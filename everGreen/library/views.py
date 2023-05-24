@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from . import models
+from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from .serializer import *
@@ -76,3 +77,14 @@ class UserDetailView(APIView):
         user = get_object_or_404(models.User, pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+    
+#Search for books
+class BookSearchAPIView(APIView):
+    def get(self, request):
+        query = request.query_params.get('q')
+        if query:
+            books = models.Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
+            serializer = BookSerializer(books, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'Search query parameter "q" is required.'}, status=status.HTTP_400_BAD_REQUEST)
