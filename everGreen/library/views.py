@@ -69,3 +69,10 @@ class BookListView(APIView):
         books = models.Book.objects.all()
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
+    
+#User detail
+class UserDetailView(APIView):
+    def get(self, request, pk):
+        user = get_object_or_404(models.User, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
