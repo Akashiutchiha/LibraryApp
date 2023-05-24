@@ -24,6 +24,7 @@ class Book(models.Model):
     description = models.CharField(max_length=200)
     category = models.CharField(max_length=200)
     is_available = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='images/', null=True, verbose_name="", storage=FileSystemStorage(location=settings.MEDIA_ROOT))
     pdf_reference = models.FileField(upload_to='pdfs/', null=True, verbose_name="", storage=FileSystemStorage(location=settings.MEDIA_ROOT))
 
     def __str__(self):
@@ -41,7 +42,7 @@ class Book(models.Model):
     
 class LibraryCard(models.Model):
     card_id = models.AutoField(primary_key=True)
-    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     issuedDate = models.DateField(auto_now_add=True)
     returnedDate = models.DateField()
