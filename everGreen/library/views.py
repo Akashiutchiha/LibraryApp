@@ -62,3 +62,10 @@ class BookAPIView(APIView):
         book = get_object_or_404(models.Book, pk=pk)
         serializer = BookSerializer(book)
         return Response(serializer.data)
+    
+#Get all books
+class BookListView(APIView):
+    def get(self, request):
+        books = models.Book.objects.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
