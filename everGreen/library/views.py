@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status
 from django.contrib.auth import authenticate, login
@@ -11,13 +12,6 @@ from . import models
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from .serializer import *
-
-# Create your views here.
-# @api_view(['GET'])
-# def index(request):
-#     data = models.Book.objects.all()
-#     serializer = BookSerializer(data, many=True)
-#     return Response(serializer.data)
 
 
 {
@@ -34,6 +28,7 @@ class UserListView(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     
+#Register
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -48,7 +43,7 @@ class RegisterView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
             
-
+#Login
 class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
@@ -61,3 +56,9 @@ class LoginView(APIView):
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+#Book detail
+class BookAPIView(APIView):
+    def get(self, request, pk):
+        book = get_object_or_404(models.Book, pk=pk)
+        serializer = BookSerializer(book)
+        return Response(serializer.data)
