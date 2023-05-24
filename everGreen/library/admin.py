@@ -3,7 +3,6 @@ from . import models
 
 # Register your models here.
 admin.site.register(models.Book)
-admin.site.register(models.User)
 admin.site.register(models.LibraryCard)
 admin.site.register(models.Borrowing)
 

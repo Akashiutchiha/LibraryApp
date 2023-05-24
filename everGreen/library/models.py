@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -17,19 +18,19 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)
-    email = models.CharField(max_length=200)
-    address = models.CharField(max_length=200)
+# class User(models.Model):
+#     user_id = models.AutoField(primary_key=True)
+#     username = models.CharField(max_length=200)
+#     password = models.CharField(max_length=200)
+#     email = models.CharField(max_length=200)
+#     address = models.CharField(max_length=200)
     
-    def __str__(self):
-        return self.username
+#     def __str__(self):
+#         return self.username
     
 class LibraryCard(models.Model):
     card_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     issuedDate = models.DateField(auto_now_add=True)
     returnedDate = models.DateField()
