@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
-from rest_framework import status
+from django.http import HttpResponse, FileResponse
 from django.contrib.auth import authenticate, login
-from rest_framework import viewsets
-from rest_framework import permissions, authentication
+from rest_framework import permissions, authentication, viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -13,6 +11,7 @@ from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from .serializer import *
+from datetime import datetime
 
 
 {
@@ -20,6 +19,9 @@ from .serializer import *
 "password":"123456",
 "email":"christiangonore2003@gmail.com"
 }
+
+
+
 
 class UserListView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
@@ -37,6 +39,7 @@ class RegisterView(APIView):
             username = serializer.validated_data['username']
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
+            confirm_password = serializer.validated_data['confirm_password']
             user = User.objects.create_user(username=username, email=email, password=password)
             token = Token.objects.create(user=user)
             return Response({'token': token.key}, status=status.HTTP_201_CREATED)
@@ -88,3 +91,47 @@ class BookSearchAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response({'error': 'Search query parameter "q" is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+#Borrow
+class BorrowingAPIView(APIView):
+    def post(self, request):
+        serializer = BorrowingSerializer(data=request.data)
+        if serializer.is_valid():
+            book = serializer.validated_data['book']
+            user = serializer.validated_data['user']
+            borrowing = models.Borrowing.objects.create(book=book, user=user)
+            borrowing.save()
+            return Response({'success': 'Book borrowed successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+#
+class DownloadBookView(generics.GenericAPIView):
+    serializer_class = DownloadHistorySerializer
+
+    def get(self, request, pk):
+        book = get_object_or_404(models.Book, pk=pk)
+        file_path = book.pdf_reference.path
+        response = FileResponse(open(file_path, 'rb'), as_attachment=True, content_type='application/pdf')
+        
+        # Create a new DownloadHistory object
+        data = {
+            'user': request.user.id,
+            'book': book.book_id,
+            'downloaded_at': datetime.now()
+        }
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return response
+    
+    # Get all download history
+class DownloadHistoryView(APIView): 
+    def get(self, request):
+        download_history = models.DownloadHistory.objects.all()
+        serializer = DownloadHistorySerializer(download_history, many=True)
+        return Response(serializer.data)
+    
+    # Get download history of a specific user

@@ -23,3 +23,8 @@ class BorrowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Borrowing
         fields = '__all__'
+        
+class DownloadHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DownloadHistory
+        fields = '__all__'

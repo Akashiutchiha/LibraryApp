@@ -7,14 +7,6 @@ from rest_framework.authtoken.models import Token
 from django.dispatch import receiver
 
 
-# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-# def create_auth_token(sender, instance=None, created=False, *args, **kwargs,):
-#     if created:
-#         Token.objects.create(user=instance)
-    
-
-
-
 # Create your models here.
 class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
@@ -63,5 +55,12 @@ class Borrowing(models.Model):
     def __str__(self):
         return str(self.borrowing_id)
     
-#Borrow
+#Download history
+class DownloadHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    downloaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} downloaded {self.book.title} on {self.downloaded_at}"
 

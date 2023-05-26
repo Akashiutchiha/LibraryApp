@@ -5,5 +5,6 @@ from . import models
 admin.site.register(models.Book)
 admin.site.register(models.LibraryCard)
 admin.site.register(models.Borrowing)
+admin.site.register(models.DownloadHistory)
 
 
