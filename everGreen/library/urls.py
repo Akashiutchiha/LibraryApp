@@ -13,6 +13,6 @@ urlpatterns = [
     path('book/search/', views.BookSearchAPIView.as_view(), name='book_search_api'),
     path('borrow/', views.BorrowingAPIView.as_view(), name='book_search_api'),
     path('book/detail/download/<int:pk>/', views.DownloadBookView.as_view(), name='download_book'),
-    path('book/history/', views.DownloadBookView.as_view(), name='download_book'),
+    path('book/history/<int:id>', views.DownloadHistoryView.as_view(), name='download_book'),
 ]
 

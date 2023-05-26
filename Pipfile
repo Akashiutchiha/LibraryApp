@@ -8,6 +8,8 @@ django = "*"
 djangorestframework = "*"
 markdown = "*"
 djangorestframework-simplejwt = "*"
+pillow = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

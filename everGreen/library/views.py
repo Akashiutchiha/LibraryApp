@@ -108,6 +108,7 @@ class BorrowingAPIView(APIView):
         
 #
 class DownloadBookView(generics.GenericAPIView):
+    queryset = models.Book.objects.all()
     serializer_class = DownloadHistorySerializer
 
     def get(self, request, pk):
@@ -126,12 +127,14 @@ class DownloadBookView(generics.GenericAPIView):
         serializer.save()
         
         return response
+
     
-    # Get all download history
-class DownloadHistoryView(APIView): 
-    def get(self, request):
-        download_history = models.DownloadHistory.objects.all()
-        serializer = DownloadHistorySerializer(download_history, many=True)
-        return Response(serializer.data)
+    # Get download history for a specific user
+class DownloadHistoryView(generics.ListAPIView):
+    serializer_class = DownloadHistorySerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['id']
+        return models.DownloadHistory.objects.filter(user=user_id)
     
-    # Get download history of a specific user
+    
