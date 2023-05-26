@@ -12,7 +12,7 @@ class BookSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = '__all__'
+        fields = ['id', 'username', 'email', 'password']
         
 class LibraryCardSerializer(serializers.ModelSerializer):
     class Meta:
